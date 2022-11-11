@@ -1,0 +1,23 @@
+# Port: 9876
+version: "3"
+
+services:
+  ddns:
+    image: jeessy/ddns-go
+    environment:
+      - PUID=1000
+      - PGID=1000
+    network_mode: host
+    restart: always
+
+  caddy:
+    image: caddy
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/caddy/:/etc/caddy/
