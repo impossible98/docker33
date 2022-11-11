@@ -1,0 +1,60 @@
+# https://miniflux.app/docs/installation.html#docker
+# Port: 7001
+version: "3"
+
+services:
+  miniflux:
+    image: miniflux/miniflux
+    depends_on:
+      - db
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - DATABASE_URL=postgres://miniflux:secret@db/miniflux?sslmode=disable
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=123456
+    ports:
+      - "7001:8080"
+    restart: always
+
+  db:
+    image: postgres:14
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=secret
+    restart: always
+    volumes:
+      - ./postgres/data/:/var/lib/postgresql/data
+
+  rsshub:
+    image: diygod/rsshub
+    depends_on:
+      - redis
+      - browserless
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - NODE_ENV=production
+      - CACHE_TYPE=redis
+      - REDIS_URL='redis://redis:6379/'
+      - PUPPETEER_WS_ENDPOINT='ws://browserless:3000'
+    ports:
+      - "1200:1200"
+    restart: always
+
+  browserless:
+    image: browserless/chrome
+    restart: always
+
+  redis:
+    image: redis:alpine
+    environment:
+      - PUID=1000
+      - PGID=1000
+    restart: always
+    volumes:
+      - ./redis/data/:/data/
