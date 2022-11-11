@@ -1,0 +1,27 @@
+# https://next-terminal.typesafe.cn/docs/install/docker-install.html
+# Port: 8089
+version: "3"
+
+services:
+  terminal:
+    image: dushixiang/next-terminal
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - DB=sqlite
+      - GUACD_HOSTNAME=guacd
+      - GUACD_PORT=4822
+    ports:
+      - "8088:8088"
+    restart: always
+    volumes:
+      - ./terminal/data/:/usr/local/next-terminal/data
+
+  guacd:
+    image: dushixiang/guacd
+    environment:
+      - PUID=1000
+      - PGID=1000
+    restart: always
+    volumes:
+      - ./guacd/data/:/usr/local/next-terminal/data
