@@ -1,0 +1,15 @@
+# https://alist.nn.ci/zh/guide/install/docker.html
+# 5244
+version: "3"
+
+services:
+  alist:
+    image: xhofe/alist
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - "5244:5244"
+    restart: always
+    volumes:
+      - ./alist/data/:/opt/alist/data/
