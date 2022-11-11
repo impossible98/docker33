@@ -1,0 +1,15 @@
+# https://hub.docker.com/r/plexinc/pms-docker
+# Port: 32400
+version: "3"
+
+services:
+  plex:
+    image: plexinc/pms-docker
+    devices:
+      - "/dev/dri:/dev/dri"
+    network_mode: host
+    restart: always
+    volumes:
+      - ./plex/config/:/config/
+      - ./plex/transcode/:/transcode/
+      - </path/to/data>:/data/
